@@ -7,10 +7,10 @@
   "author": "Solo Support Workspace",
   "tags": ["support", "inbox", "customers", "founder"],
   "tabs": [
-    { "id": "dashboard", "label": "Dashboard", "customComponent": "InboxDashboard" },
+    { "id": "overview", "label": "Overview", "customComponent": "InboxDashboard" },
     { "id": "activity", "label": "Activity", "builtIn": "board", "badge": "activity" },
     { "id": "files", "label": "Files", "builtIn": "files" },
     { "id": "integrations", "label": "Integrations", "builtIn": "integrations" }
   ],
-  "defaultTab": "dashboard"
+  "defaultTab": "overview"
 }
