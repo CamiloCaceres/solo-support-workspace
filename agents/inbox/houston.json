@@ -12,5 +12,12 @@
     { "id": "files", "label": "Files", "builtIn": "files" },
     { "id": "integrations", "label": "Integrations", "builtIn": "integrations" }
   ],
-  "defaultTab": "overview"
+  "defaultTab": "overview",
+  "agentSeeds": {
+    "conversations.json": "[]",
+    "customers.json": "[]",
+    "followups.json": "[]",
+    "bug-candidates.json": "[]",
+    "churn-flags.json": "[]"
+  }
 }
