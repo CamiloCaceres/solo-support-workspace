@@ -1,0 +1,16 @@
+{
+  "id": "inbox",
+  "name": "Inbox",
+  "description": "Frontline support desk — triages incoming, drafts in your voice, tracks conversations, surfaces what needs you now.",
+  "icon": "Inbox",
+  "category": "business",
+  "author": "Solo Support Workspace",
+  "tags": ["support", "inbox", "customers", "founder"],
+  "tabs": [
+    { "id": "dashboard", "label": "Dashboard", "customComponent": "InboxDashboard" },
+    { "id": "activity", "label": "Activity", "builtIn": "board", "badge": "activity" },
+    { "id": "files", "label": "Files", "builtIn": "files" },
+    { "id": "integrations", "label": "Integrations", "builtIn": "integrations" }
+  ],
+  "defaultTab": "dashboard"
+}

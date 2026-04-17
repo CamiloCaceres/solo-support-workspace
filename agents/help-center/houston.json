@@ -1,0 +1,16 @@
+{
+  "id": "help-center",
+  "name": "Help Center",
+  "description": "Knowledge + patterns — drafts KB articles from tickets, spots recurring questions, tracks feature requests and known issues, posts weekly digests.",
+  "icon": "BookOpen",
+  "category": "business",
+  "author": "Solo Support Workspace",
+  "tags": ["kb", "docs", "patterns", "support"],
+  "tabs": [
+    { "id": "dashboard", "label": "Dashboard", "customComponent": "HelpCenterDashboard" },
+    { "id": "activity", "label": "Activity", "builtIn": "board", "badge": "activity" },
+    { "id": "files", "label": "Files", "builtIn": "files" },
+    { "id": "integrations", "label": "Integrations", "builtIn": "integrations" }
+  ],
+  "defaultTab": "dashboard"
+}
