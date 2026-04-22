@@ -1,5 +1,5 @@
 {
   "name": "Solo Support Workspace",
-  "description": "Two-agent customer support workspace for solo founders and small teams (2-5 people) running their own support. Inbox owns every inbound conversation — triages, drafts in your voice, tracks SLAs, catches bugs, flags churn risk. Help Center owns the knowledge + patterns layer — drafts KB articles from resolved tickets, spots recurring questions, tracks feature requests, broadcasts shipped features to requesters, posts a weekly digest. All external tool access (Gmail, Intercom, Front, Zendesk, Linear, Stripe, Slack, etc.) flows through Composio — no per-tool configuration.",
-  "agents": ["inbox", "help-center"]
+  "description": "Four-agent customer support vertical for solo founders and small teams (2-5 people) running their own support. Head of Customer Support owns the shared support-context.md (product map, tone, SLAs, VIPs, routing). Inbox triages and drafts replies. Help Center turns resolved tickets into KB articles and broadcasts shipped features to requesters. Success & Retention runs onboarding, account health, renewal outreach, churn saves, QBRs, and expansion nudges. Every external tool (inbox, tracker, billing, usage analytics) flows through Composio - no per-tool configuration. Drafts only - the founder approves every send.",
+  "agents": ["head-of-support", "inbox", "help-center", "success"]
 }

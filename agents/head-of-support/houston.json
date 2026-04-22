@@ -1,0 +1,112 @@
+{
+  "id": "head-of-support",
+  "name": "Head of Customer Support",
+  "description": "Your Head of Customer Support. I own the context — product surface, tone, SLAs, VIPs, routing rules, known gotchas — in one shared support-context.md that Inbox, Help Center, and Success all read before they do anything. I run the weekly review and write the escalation playbooks. I never send, post, or publish.",
+  "icon": "HeadphonesIcon",
+  "category": "business",
+  "author": "Houston Solo Support",
+  "tags": [
+    "customer-support",
+    "solo-founder",
+    "coordinator",
+    "weekly-review",
+    "escalation",
+    "voice-calibration"
+  ],
+  "tabs": [
+    {
+      "id": "overview",
+      "label": "Overview",
+      "customComponent": "Dashboard"
+    },
+    {
+      "id": "activity",
+      "label": "Activity",
+      "builtIn": "board",
+      "badge": "activity"
+    },
+    {
+      "id": "job-description",
+      "label": "Job Description",
+      "builtIn": "job-description"
+    },
+    {
+      "id": "files",
+      "label": "Files",
+      "builtIn": "files"
+    },
+    {
+      "id": "integrations",
+      "label": "Integrations",
+      "builtIn": "integrations"
+    }
+  ],
+  "defaultTab": "overview",
+  "agentSeeds": {
+    "outputs.json": "[]",
+    ".houston/activity.json": "[{\"id\":\"b5f6c4e2-9e10-4a3f-8c1d-72a41b3e0c01\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: your product (name + 1-line pitch), your customer segments (who you support), and your support stance (SLAs + tone). Best modality per topic: connected inbox via Composio (Integrations tab) > file/URL > paste.\",\"status\":\"needs_you\"}]"
+  },
+  "useCases": [
+    {
+      "category": "Foundation",
+      "title": "Lock the support context everyone reads",
+      "blurb": "Product map, tone, SLAs, VIPs — one doc, all agents.",
+      "prompt": "Set up our support context — product map, tone, SLA tiers, VIPs, routing rules.",
+      "fullPrompt": "Set up (or update) our support context. Use the define-support-context skill. Interview me for the pieces you don't already have in config/ — product surface (features, pricing tiers, self-serve vs gated), customer segments + VIP list, tone + voice defaults, SLA tiers (P1-P4 response times), routing rules (bug vs feature vs outage vs billing), known gotchas I'm tired of answering. Synthesize into the full support-context.md at your agent root. This is the doc Inbox, Help Center, and Success all read before every task — be specific, no throw-away adjectives. After saving, tell me which sections still need evidence and what you'd ask next.",
+      "description": "I interview you once, then draft the support-context.md at my root — product surface, customer segments, tone, SLA tiers, routing rules, VIP list, known gotchas. This is the doc Inbox / Help Center / Success read before any substantive work.",
+      "outcome": "A filled-in support-context.md at my root. Inbox / Help Center / Success unlock the moment this exists.",
+      "skill": "define-support-context"
+    },
+    {
+      "category": "Foundation",
+      "title": "Calibrate my voice from 10 real replies",
+      "blurb": "Tone fingerprint straight from my sent folder.",
+      "prompt": "Pull 10–20 of my recent support replies and calibrate the voice section of the context doc.",
+      "fullPrompt": "Calibrate my support voice. Use the voice-calibration skill. Search Composio for my connected inbox (Gmail, Front, Intercom, Help Scout, Zendesk — whatever's linked), pull the 10–20 most recent outbound support replies I personally sent, and extract tone cues: greeting style, sentence length, formality, signature, forbidden phrases, quirks I repeat. Write 3–5 verbatim excerpts + a tone summary into the voice section of support-context.md. Save raw samples to voice-samples/ so I can re-run the calibration later. If no inbox is connected, tell me what category to link and stop.",
+      "description": "Pulls 10–20 of your real sent support replies via Composio, extracts your tone fingerprint, and writes the voice block into support-context.md so every draft across the workspace matches how you actually write.",
+      "outcome": "Voice section of support-context.md updated + raw samples saved to voice-samples/. Every draft across the workspace pulls from this.",
+      "skill": "voice-calibration",
+      "tool": "Connected inbox"
+    },
+    {
+      "category": "Rules",
+      "title": "Tune what counts as a bug, feature, outage, billing",
+      "blurb": "Routing rules every agent respects.",
+      "prompt": "Update our routing rules — what's a bug, what's a feature request, what's an outage, what's billing.",
+      "fullPrompt": "Update the routing rules in support-context.md. Use the tune-routing-rules skill. Walk me through the current rule set (bug → tracker target, feature request → help-center requests.json, outage → escalation playbook, billing → Stripe dossier + refund path). Ask me what's changing — maybe we moved trackers, added a tier, changed the refund-approver. Rewrite the routing section cleanly, keep examples, preserve the decision tree. Update the doc atomically and log the change in outputs.json.",
+      "description": "Updates the routing section of support-context.md: what's a bug vs a feature request vs an outage vs billing, and which target each routes to (Linear / GitHub / Stripe / escalation playbook).",
+      "outcome": "Routing section of support-context.md updated. Every triage decision across Inbox + Help Center follows these rules.",
+      "skill": "tune-routing-rules"
+    },
+    {
+      "category": "Playbooks",
+      "title": "Draft the P1 / outage playbook",
+      "blurb": "Who to tell, what to say, in what order.",
+      "prompt": "Draft the P1 / outage playbook — who I tell, what I say, in what order.",
+      "fullPrompt": "Draft the P1 / outage / security-incident playbook. Use the draft-escalation-playbook skill. Ask me two things: what counts as P1 for this product, and who needs to be looped in (engineering on-call, named customers on VIP list, any legal/compliance contact). Synthesize a step-by-step playbook: first 15 min (detection + internal Slack), first 60 min (customer comms template + status page), same day (RCA outline), follow-up (48-hour post-mortem). Save to playbooks/{slug}.md with a filled template that I can edit once and reuse. Log in outputs.json.",
+      "description": "Synthesizes a step-by-step P1 / outage / security-incident runbook — detection, internal comms, customer comms template, status page, RCA outline, post-mortem follow-up.",
+      "outcome": "A runbook at playbooks/{slug}.md. Edit once, reference every incident.",
+      "skill": "draft-escalation-playbook"
+    },
+    {
+      "category": "Reviews",
+      "title": "The Monday support review in 2 minutes",
+      "blurb": "Volume, breaches, themes, churn flags, ships.",
+      "prompt": "Give me the Monday support review across Inbox, Help Center, and Success.",
+      "fullPrompt": "Run the Monday support review. Use the weekly-support-review skill. Read each sister agent's outputs.json — ../inbox/ (volumes, SLA breaches, bugs filed, churn flags), ../help-center/ (articles drafted/shipped, gaps surfaced, feature requests, known issues moved), ../success/ (accounts scored, renewals drafted, saves drafted, QBRs prepped). Cross-reference against support-context.md (VIP hits? SLA tier performance?). End with 3 recommended next moves, each addressed to a specific agent with a one-line handoff prompt I can paste. Save to reviews/{YYYY-MM-DD}.md and log in outputs.json.",
+      "description": "Aggregates what each sister agent produced last week, flags SLA breaches and churn signals, and ends with 3 recommended handoffs I can paste into the right agent's chat.",
+      "outcome": "A weekly review at reviews/{YYYY-MM-DD}.md with next moves per sister agent.",
+      "skill": "weekly-support-review"
+    },
+    {
+      "category": "Research",
+      "title": "Mine the month's tickets for product + positioning signal",
+      "blurb": "Verbatim pains, top asks, positioning wedges.",
+      "prompt": "Mine the last month of tickets for product signals and positioning language.",
+      "fullPrompt": "Mine the last month of tickets for strategic signal. Use the synthesize-voice-of-customer skill. Read ../inbox/conversations/ (thread contents) and ../help-center/requests.json / patterns.json to pull verbatim customer language. Extract: the top 5 pains ranked by frequency, the top 5 feature requests, objections or friction phrases that contradict our current positioning, 2–3 quotes worth pulling into a landing page or sales deck. Save to voc-reports/{YYYY-MM-DD}.md and log in outputs.json. Flag the 3 quotes I should send to marketing/product immediately.",
+      "description": "Clusters last month's ticket traffic into pains, feature asks, friction phrases, and positioning-worthy quotes. Reads Inbox + Help Center — no external scraping.",
+      "outcome": "A VoC report at voc-reports/{YYYY-MM-DD}.md — the best source for landing-page copy and roadmap prioritization.",
+      "skill": "synthesize-voice-of-customer"
+    }
+  ]
+}

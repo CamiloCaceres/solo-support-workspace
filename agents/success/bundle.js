@@ -1,4 +1,4 @@
-// Houston agent dashboard bundle — Inbox.
+// Houston agent dashboard bundle — Success & Retention.
 // Hand-crafted IIFE. No ES modules, no build step, no import statements.
 // Access React via window.Houston.React. Export via window.__houston_bundle__.
 //
@@ -26,111 +26,78 @@
 
   // ═════════ PER-AGENT CONFIG (injected by generator) ═════════
   var AGENT = {
-  "name": "Inbox",
-  "tagline": "Triage inbound, draft replies in your voice, track promises, watch SLAs, catch bugs and churn signals. Drafts only — I never send.",
+  "name": "Success & Retention",
+  "tagline": "Onboarding sequences, account health, renewal drafts, churn-save drafts, QBR prep, expansion nudges. Drafts only — I never send.",
   "useCases": [
     {
-      "category": "Triage",
-      "title": "Pull unread and triage the inbox",
-      "blurb": "Categorize, prioritize, VIP-flag everything new.",
-      "prompt": "Pull unread from my connected inbox and triage them.",
-      "fullPrompt": "Pull unread messages from my connected inbox via Composio and triage them. Use the triage-incoming skill. Read ../head-of-support/support-context.md first for routing rules + VIP list + SLA tiers. For each message, categorize (bug / how-to / feature / billing / account / security), priority-tag (P1-P4 per the context doc), VIP-flag if applicable, detect bug or churn signals, and append to conversations.json + create conversations/{id}/ subfolder with thread.json and notes.md. Don't draft replies yet — that's draft-reply's job. End with a ranked list of what I should look at first.",
-      "description": "Pulls new messages via Composio, classifies + priority-tags + VIP-flags them using the shared context doc's rules, and indexes them into conversations.json. Surfaces a ranked 'start here' list.",
-      "outcome": "Triaged entries in conversations.json + per-thread folders at conversations/{id}/. Ranked list in chat.",
-      "skill": "triage-incoming",
-      "tool": "Connected inbox"
+      "category": "Accounts",
+      "title": "Pull the full timeline for one account",
+      "blurb": "Sign-up to today — tickets, bugs, asks, ships, health.",
+      "prompt": "Show me the full timeline for {customer}.",
+      "fullPrompt": "Build the full customer timeline for {customer}. Use the customer-timeline skill. Read ../inbox/customers.json and ../inbox/conversations/ for every interaction, ../inbox/bug-candidates.json for bugs they've hit, ../help-center/requests.json for features they've asked for, ../help-center/shipped-log.json for anything that shipped since. Pull billing state from Stripe via Composio if connected. Synthesize a chronological timeline at accounts/{slug}/timeline.md with: sign-up, key tickets with resolution, bugs filed, features requested (with ship status), churn flags fired, health-score history. End with: 'What the account looks like today' — 3 sentences. Log in outputs.json.",
+      "description": "Aggregates Inbox conversations, bug candidates, Help Center feature requests + ships, and Stripe billing state into one chronological timeline per account.",
+      "outcome": "A timeline at accounts/{slug}/timeline.md — required reading before I draft renewals, saves, or QBR prep for that account.",
+      "skill": "customer-timeline"
     },
     {
-      "category": "Triage",
-      "title": "Give me the morning brief",
-      "blurb": "Ranked 'start here' — VIPs, breaches, promises, flags.",
-      "prompt": "Give me my morning brief.",
-      "fullPrompt": "Draft my morning brief. Use the morning-briefing skill. Read ../head-of-support/support-context.md for VIP list + SLA tiers. Aggregate today's priorities: VIPs needing response, SLA breaches imminent or active, promises due today (from followups.json), conversations stale > 48h waiting on me, fresh bug candidates, fresh churn flags. Rank them: VIPs at the top, then SLA-imminent, then broken-promise risk, then fresh signal. Write to morning-brief.md at agent root (overwrite daily). Log in outputs.json.",
-      "description": "Ranked 'start here' list: VIPs, SLA breaches, promises due, stale threads, new bugs, new churn flags. Overwrites morning-brief.md daily.",
-      "outcome": "A 2-min readable brief at morning-brief.md. Copy the top 3 into your daily plan.",
-      "skill": "morning-briefing"
+      "category": "Accounts",
+      "title": "Score account health — GREEN / YELLOW / RED",
+      "blurb": "One score, three signals, one recommended action.",
+      "prompt": "Score account health for {customer}.",
+      "fullPrompt": "Score account health for {customer}. Use the score-account-health skill. Read the customer's timeline (run customer-timeline first if missing), then evaluate signals: support volume trend (Inbox), unresolved bugs affecting them, unmet feature requests, churn-flag status, last-seen if available via Composio usage analytics, billing state via Stripe. Output GREEN / YELLOW / RED with: the 3 signals driving the score, one paragraph of reasoning, and ONE recommended next action (write, nudge, escalate, leave alone). Save to accounts/{slug}/health-{YYYY-MM-DD}.md, update health-scores.json index, log in outputs.json.",
+      "description": "Traffic-light score per account from support volume, bug count, unmet asks, churn flags, usage (if connected), billing state. Outputs GREEN / YELLOW / RED + one recommended action.",
+      "outcome": "A score at accounts/{slug}/health-{YYYY-MM-DD}.md + updated health-scores.json. Feeds the weekly review.",
+      "skill": "score-account-health"
     },
     {
-      "category": "Drafting",
-      "title": "Draft a reply for one conversation",
-      "blurb": "Voice-matched, dossier-aware, approval-gated.",
-      "prompt": "Draft a reply for conversation {id}.",
-      "fullPrompt": "Draft a reply for conversation {id}. Use the draft-reply skill. Read ../head-of-support/support-context.md for voice + known gotchas. Read conversations/{id}/thread.json for context + conversations/{id}/notes.md for my commitments. Pull the customer dossier (run customer-dossier first if missing). Draft ONE reply matching the voice block of the context doc — no corporate hedging, no 'I apologize for the inconvenience,' short paragraphs, concrete next step. Save to conversations/{id}/draft.md. Never send — I approve first.",
-      "description": "Reads the context doc for voice + gotchas, reads the thread, pulls the dossier, drafts a voice-matched reply into conversations/{id}/draft.md. Never sends.",
-      "outcome": "A draft at conversations/{id}/draft.md. Read it, edit if you want, tell me 'send' once approved.",
-      "skill": "draft-reply"
+      "category": "Onboarding",
+      "title": "Draft onboarding sequence for new signups",
+      "blurb": "Day 0/1/3/7/14 drips with CTA + success metric.",
+      "prompt": "Draft the onboarding sequence for new {segment} signups.",
+      "fullPrompt": "Draft a 5-touch onboarding sequence for new {segment} signups (or a specific new customer if you name them). Use the draft-onboarding-sequence skill. Read ../head-of-support/support-context.md for product surface + voice, and the segment's profile if we have one. Draft Day 0 (welcome), Day 1 (first-value nudge), Day 3 (milestone check), Day 7 (feedback ask), Day 14 (activation review). For each: subject, body, CTA, and what we'd consider success for that touch. Save to onboarding/{slug}.md, log in outputs.json. Draft only — I never send.",
+      "description": "Day 0 / 1 / 3 / 7 / 14 drip — welcome, first-value nudge, milestone check, feedback ask, activation review. Each touch has a CTA and a success metric.",
+      "outcome": "A sequence at onboarding/{slug}.md ready to paste into your outbound tool or schedule via lifecycle.",
+      "skill": "draft-onboarding-sequence"
     },
     {
-      "category": "Drafting",
-      "title": "Summarize a conversation",
-      "blurb": "What they asked, what we said, what's open.",
-      "prompt": "Summarize conversation {id}.",
-      "fullPrompt": "Summarize conversation {id}. Use the thread-summary skill. Read conversations/{id}/thread.json and the notes file. Produce a 4-part summary: what the customer asked, how we responded, what's currently open (promises, blockers), and the recommended next step. Save to conversations/{id}/summary.md and log in outputs.json.",
-      "description": "4-part summary: what they asked, what we said, what's open, recommended next step.",
-      "outcome": "A summary at conversations/{id}/summary.md.",
-      "skill": "thread-summary"
+      "category": "Renewals",
+      "title": "Draft 30/60/90 renewal outreach",
+      "blurb": "Pre-renewal touches grounded in their timeline.",
+      "prompt": "Draft renewal outreach for {account} — renewal is in {date}.",
+      "fullPrompt": "Draft renewal outreach for {account}, renewal date {date}. Use the draft-renewal-outreach skill. Pull the account's timeline (run customer-timeline first if missing) and the current health score. Draft 3 touches: Day-90 (ROI reminder, ship highlights since last renewal, ask for a check-in), Day-60 (address known friction — any RED health signals, open bugs affecting them, unmet feature asks now shipped), Day-30 (direct ask for the conversation, propose a 20-min call with 2 agenda bullets). Voice pulls from support-context.md. Save to renewals/{slug}.md, log in outputs.json. Draft only.",
+      "description": "3-touch pre-renewal sequence (Day-90 / Day-60 / Day-30) grounded in the account timeline, health score, open items, and what's shipped that they asked for.",
+      "outcome": "A sequence at renewals/{slug}.md. Paste into your outbound tool after you approve.",
+      "skill": "draft-renewal-outreach"
     },
     {
-      "category": "Customer",
-      "title": "Who is this customer?",
-      "blurb": "Profile, plan, history, open bugs, flags.",
-      "prompt": "Who is {customer}?",
-      "fullPrompt": "Build the customer dossier for {customer}. Use the customer-dossier skill. Look them up in customers.json (create if missing). Pull billing state via Composio (search billing / Stripe) — plan, MRR, renewal, payment status. Aggregate interaction history from conversations.json filtered to this customer. Cross-reference bug-candidates.json for bugs they've reported and churn-flags.json for any flags. Save to customers/{slug}/profile.json + customers/{slug}/history.json. Return a 3-paragraph summary: who they are, what they use us for, what's open.",
-      "description": "Pulls billing via Composio, aggregates conversation history, cross-references bug candidates and churn flags. Saves to customers/{slug}/ and returns a 3-paragraph dossier.",
-      "outcome": "A dossier at customers/{slug}/profile.json + history.json, plus the 3-paragraph summary in chat.",
-      "skill": "customer-dossier",
-      "tool": "Connected billing"
+      "category": "Saves",
+      "title": "Draft a churn-save for an at-risk account",
+      "blurb": "Acknowledge, name the pain, offer the real next step.",
+      "prompt": "Draft a churn-save for {account} — they just flagged for downgrade.",
+      "fullPrompt": "Draft a churn-save for {account}. Use the draft-churn-save skill. Pull the account's timeline + health score. Read ../inbox/churn-flags.json for the signal that fired and ../inbox/conversations/ for the underlying messages. Draft ONE message (not a sequence): acknowledge the signal honestly, name the specific pain you see from their history (open bugs? unmet asks? silence?), offer the real next step — a 15-min call, a specific fix, a price concession (flag for my approval, never propose without me saying so). Voice pulls from support-context.md. Save to saves/{slug}.md, log in outputs.json. Draft only.",
+      "description": "Single save message grounded in the specific reason the account is at risk — acknowledge, name the pain from history, offer the real next step. Never proposes pricing concessions without approval.",
+      "outcome": "A save draft at saves/{slug}.md. Approve and send.",
+      "skill": "draft-churn-save"
     },
     {
-      "category": "Commitments",
-      "title": "What did I promise and when is it due?",
-      "blurb": "Every 'I'll check with engineering by Friday' tracked.",
-      "prompt": "What did I promise and when is it due?",
-      "fullPrompt": "Roll up my open promises from followups.json. Use the promise-tracker skill. List every open commitment with: customer, what I said I'd do, due date, current status, days until due (or days overdue). Flag anything already past due in red. Flag VIP-linked promises at the top. End with 2–3 suggested next actions (reply to customer X, check with engineering on Y, close Z).",
-      "description": "Rolls up every open commitment with due date and status. Flags overdue and VIP-linked ones.",
-      "outcome": "A list in chat plus an updated view of followups.json.",
-      "skill": "promise-tracker"
+      "category": "QBR",
+      "title": "Prep a QBR for a customer check-in",
+      "blurb": "What they've gotten, what they asked for, what's next.",
+      "prompt": "Prep a QBR for {account} — meeting on {date}.",
+      "fullPrompt": "Prep a QBR for {account}, meeting on {date}. Use the prep-qbr skill. Pull the account's timeline + latest health score. Draft a QBR outline: (1) What they've gotten — usage/outcome highlights, (2) What they asked for and what shipped, (3) Where they're stuck — open bugs, unmet asks, friction, (4) What we're proposing next — 2–3 concrete moves we'd like their input on. Voice pulls from support-context.md. Save to qbrs/{slug}-{YYYY-MM-DD}.md, log in outputs.json.",
+      "description": "Four-section QBR outline — wins, asks-shipped, friction, proposed next moves. Grounded in the account timeline so nothing's generic.",
+      "outcome": "A QBR outline at qbrs/{slug}-{YYYY-MM-DD}.md. Convert to slides or read straight off the doc.",
+      "skill": "prep-qbr"
     },
     {
-      "category": "SLA",
-      "title": "What's about to breach SLA?",
-      "blurb": "Catch it before the customer has to chase.",
-      "prompt": "What's about to breach SLA?",
-      "fullPrompt": "Run the SLA watchdog. Use the sla-watchdog skill. Read ../head-of-support/support-context.md for the SLA tier definitions (P1/P2/P3/P4 response-time expectations) — never assume defaults. Scan conversations.json for any threads approaching or past their SLA window. Sort by time-to-breach (ascending, already-breached first). Surface the top 10. For each: customer, priority, time-to-breach (or overdue-by), what I should do.",
-      "description": "Reads SLA tiers from the shared context doc, finds threads approaching or past their window, sorts by time-to-breach.",
-      "outcome": "A sorted breach list in chat. Pair with draft-reply on the worst ones.",
-      "skill": "sla-watchdog"
-    },
-    {
-      "category": "Signals",
-      "title": "Scan the inbox for churn risk",
-      "blurb": "Sentiment + patterns across the last month.",
-      "prompt": "Scan the inbox for churn risk.",
-      "fullPrompt": "Run a churn-risk scan across recent inbox traffic. Use the churn-risk-scan skill. Read ../head-of-support/support-context.md for VIP list. Scan the last 30 days of conversations for: sentiment-negative phrases, repeated complaints, silence > 14 days after a promise, downgrade/cancellation language, 'you don't listen' patterns. Score each flagged customer by severity. Write new/updated entries to churn-flags.json. Surface the top 5 in chat with one-sentence reasoning per flag.",
-      "description": "30-day rollup of sentiment + behavior signals across inbox traffic. Scores flagged customers and updates churn-flags.json.",
-      "outcome": "Updated churn-flags.json + top 5 summary in chat. Hand RED flags to Success for save drafts.",
-      "skill": "churn-risk-scan"
-    },
-    {
-      "category": "Signals",
-      "title": "Is this a bug? Log it.",
-      "blurb": "Extract repro + severity + tracker target.",
-      "prompt": "Is this a bug? Log it — conversation {id}.",
-      "fullPrompt": "Evaluate whether conversation {id} is a bug report and, if so, log it. Use the detect-bug-report skill. Read ../head-of-support/support-context.md for routing rules — where bugs go (Linear / GitHub / internal). Read the thread. Decide: is this a reproducible bug, a how-to question, or a feature ask? If bug: extract repro steps, severity (per context doc), customer + version/platform. Append to bug-candidates.json. Optionally sync to the tracker via Composio (ask before creating externally). If not a bug: tell me what it actually is.",
-      "description": "Classifies the conversation, extracts repro + severity per the context doc's routing rules, appends to bug-candidates.json. Asks before syncing externally.",
-      "outcome": "Either a new entry in bug-candidates.json (with optional tracker ticket) or a classification explanation.",
-      "skill": "detect-bug-report",
-      "tool": "Connected tracker"
-    },
-    {
-      "category": "Recovery",
-      "title": "Surface stale threads waiting on me",
-      "blurb": "The ghosts I forgot to reply to.",
-      "prompt": "What threads are waiting on me?",
-      "fullPrompt": "Find stale threads. Use the stale-thread-rescue skill. Scan conversations.json for threads where: last message is from the customer AND the last message is > 48h old AND status is not 'resolved'. Sort by age. Surface top 10 with: customer, last message timestamp, last message one-line summary, suggested next step (draft-reply, close-with-answer, escalate). Also flag any thread where I promised a follow-up (cross-ref followups.json) that's gone cold.",
-      "description": "Finds threads > 48h without a response where the ball is in your court. Surfaces with suggested next steps.",
-      "outcome": "A sorted stale list in chat. Pair with draft-reply to clear them.",
-      "skill": "stale-thread-rescue"
+      "category": "Expansion",
+      "title": "Draft an expansion nudge",
+      "blurb": "They're hitting the ceiling — open the conversation.",
+      "prompt": "Draft an expansion nudge for {account} — they're hitting the ceiling on plan {tier}.",
+      "fullPrompt": "Draft an expansion nudge for {account}. Use the nudge-expansion skill. Pull the account's timeline + health score. Look for ceiling signals: usage near plan limit (via Composio usage analytics if connected), support tickets about limits, asks for features only available on higher plans, new team members added. Draft ONE short message: acknowledge the specific signal, name the higher-plan feature that would help them, offer a 15-min conversation — not a close. Voice pulls from support-context.md. Save to expansion/{slug}.md, log in outputs.json. Draft only.",
+      "description": "Single expansion outreach grounded in a specific ceiling signal (usage near limit, feature request on higher tier, team growth). Opens a conversation, doesn't push a close.",
+      "outcome": "A nudge at expansion/{slug}.md. Approve and send.",
+      "skill": "nudge-expansion"
     }
   ]
 };
