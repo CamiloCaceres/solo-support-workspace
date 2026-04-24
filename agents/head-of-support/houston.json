@@ -39,12 +39,18 @@
       "id": "integrations",
       "label": "Integrations",
       "builtIn": "integrations"
+    },
+    {
+      "id": "routines",
+      "label": "Routines",
+      "builtIn": "routines"
     }
   ],
   "defaultTab": "overview",
   "agentSeeds": {
     "outputs.json": "[]",
-    ".houston/activity.json": "[{\"id\":\"b5f6c4e2-9e10-4a3f-8c1d-72a41b3e0c01\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: your product (name + 1-line pitch), your customer segments (who you support), and your support stance (SLAs + tone). Best modality per topic: connected inbox via Composio (Integrations tab) > file/URL > paste.\",\"status\":\"needs_you\"}]"
+    ".houston/activity.json": "[{\"id\":\"b5f6c4e2-9e10-4a3f-8c1d-72a41b3e0c01\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: your product (name + 1-line pitch), your customer segments (who you support), and your support stance (SLAs + tone). Best modality per topic: connected inbox via Composio (Integrations tab) > file/URL > paste.\",\"status\":\"needs_you\"}]",
+    ".houston/routines/routines.json": "[{\"id\":\"monday-support-review\",\"name\":\"Monday support review\",\"description\":\"Cross-agent weekly rollup every Monday 9am — SLA breaches, churn signals, ships, next moves per sister agent.\",\"prompt\":\"Run the Monday support review using the weekly-support-review skill. Before starting, confirm support-context.md exists at the agent root — if missing, stop and state that the founder needs to run define-support-context first. Read each sister agent's outputs.json (../inbox/, ../help-center/, ../success/), cross-reference against support-context.md (VIP hits? SLA tier performance?), and end with 3 recommended next moves, each addressed to a specific agent with a one-line handoff prompt the founder can paste. Save to reviews/{YYYY-MM-DD}.md and log in outputs.json. If none of the sister agents produced anything new since the last review on file (check reviews/ for the most recent), and there are no open SLA breaches, VIP issues, or churn flags to flag, there is nothing for the founder to act on.\",\"schedule\":\"0 9 * * 1\",\"enabled\":true,\"suppress_when_silent\":true,\"created_at\":\"2026-04-23T00:00:00Z\",\"updated_at\":\"2026-04-23T00:00:00Z\"},{\"id\":\"monthly-voc-synthesis\",\"name\":\"Monthly voice-of-customer synthesis\",\"description\":\"1st of the month — mine last month's ticket traffic for pains, feature asks, and positioning quotes.\",\"prompt\":\"Run the monthly voice-of-customer synthesis using the synthesize-voice-of-customer skill. Before starting, confirm support-context.md exists at the agent root — if missing, stop and state that the founder needs to run define-support-context first. Read ../inbox/conversations.json and ../inbox/conversations/{id}/thread.json for the last 30 days plus ../help-center/requests.json and ../help-center/patterns.json. Extract the top 5 pains, top 5 feature requests, objections that contradict current positioning, and 2-3 quotes worth pulling into a landing page or sales deck. Save to voc-reports/{YYYY-MM-DD}.md and log in outputs.json. Flag the 3 quotes the founder should send to marketing/product immediately. If ../inbox/ has no new conversations since the last VoC report on file (check voc-reports/ for the most recent) and ../help-center/requests.json has no new entries, there is nothing to synthesize.\",\"schedule\":\"0 9 1 * *\",\"enabled\":true,\"suppress_when_silent\":true,\"created_at\":\"2026-04-23T00:00:00Z\",\"updated_at\":\"2026-04-23T00:00:00Z\"}]"
   },
   "useCases": [
     {

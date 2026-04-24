@@ -40,6 +40,11 @@
       "id": "integrations",
       "label": "Integrations",
       "builtIn": "integrations"
+    },
+    {
+      "id": "routines",
+      "label": "Routines",
+      "builtIn": "routines"
     }
   ],
   "defaultTab": "overview",
@@ -47,7 +52,8 @@
     "outputs.json": "[]",
     "accounts.json": "[]",
     "health-scores.json": "[]",
-    ".houston/activity.json": "[{\"id\":\"c8b7d321-4f1e-4b99-a2de-51c8912e0b02\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: which accounts you track, your renewal cadence, and how you define healthy vs at-risk. Best modality per topic: connected CRM/billing via Composio (Integrations tab) > file > paste.\",\"status\":\"needs_you\"}]"
+    ".houston/activity.json": "[{\"id\":\"c8b7d321-4f1e-4b99-a2de-51c8912e0b02\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: which accounts you track, your renewal cadence, and how you define healthy vs at-risk. Best modality per topic: connected CRM/billing via Composio (Integrations tab) > file > paste.\",\"status\":\"needs_you\"}]",
+    ".houston/routines/routines.json": "[{\"id\":\"weekly-health-review\",\"name\":\"Weekly account health review\",\"description\":\"Every Monday 9am — re-score tracked accounts, surface health-score changes (new REDs, GREEN → YELLOW drops).\",\"prompt\":\"Run the weekly account health review. First confirm ../head-of-support/support-context.md exists — if missing, stop and state the founder needs to run define-support-context first. Read accounts.json for the list of tracked accounts and health-scores.json for current scores. For each tracked account: run score-account-health using signals from ../inbox/conversations.json, ../inbox/bug-candidates.json, ../inbox/churn-flags.json, ../help-center/requests.json, ../help-center/shipped-log.json, and billing state via Composio if a billing integration is connected. Save each scoring write-up to accounts/{slug}/health-{YYYY-MM-DD}.md and update health-scores.json (merge on accountSlug). In the output, surface only CHANGES since last week's scores: new REDs, GREEN → YELLOW drops, YELLOW → RED drops, plus any RED that has persisted 2+ weeks without action. For each, give one-sentence reasoning and a suggested next move (draft-churn-save, prep-qbr, personal check-in). On the first run, establish a baseline in health-scores.json and emit that as 'baseline established' with no alerts. If no tracked accounts exist yet in accounts.json, there is nothing to review. If all scores are stable (no new REDs, no drops, no persistent RED), there is nothing for the founder to act on.\",\"schedule\":\"0 9 * * 1\",\"enabled\":true,\"suppress_when_silent\":true,\"created_at\":\"2026-04-23T00:00:00Z\",\"updated_at\":\"2026-04-23T00:00:00Z\"},{\"id\":\"weekly-renewal-horizon\",\"name\":\"Weekly renewal horizon scan\",\"description\":\"Every Friday 4pm — flag tracked accounts with renewal dates inside 90 days that lack a drafted renewal sequence.\",\"prompt\":\"Run the weekly renewal horizon scan. First confirm ../head-of-support/support-context.md exists — if missing, stop and state the founder needs to run define-support-context first. Read accounts.json and filter to accounts with renewalDate within the next 90 days. For each, check the renewals/ subfolder for an existing renewal sequence file ({account-slug}-{YYYY-MM-DD}.md). Surface only accounts that meet ANY of these: (1) renewal inside 90 days with NO renewal sequence drafted yet, (2) renewal inside 60 days where the latest drafted sequence is more than 30 days old and needs a refresh, (3) renewal inside 30 days on an account whose latest health-scores.json entry is RED or YELLOW. For each flagged account, give the renewal date, days out, current health score, and a suggested action (draft-renewal-outreach for {slug}). If accounts.json is empty or has no renewalDate populated, there is nothing to scan. If no flagged accounts match the criteria, there is nothing for the founder to act on.\",\"schedule\":\"0 16 * * 5\",\"enabled\":true,\"suppress_when_silent\":true,\"created_at\":\"2026-04-23T00:00:00Z\",\"updated_at\":\"2026-04-23T00:00:00Z\"}]"
   },
   "useCases": [
     {

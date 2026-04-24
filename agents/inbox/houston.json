@@ -32,6 +32,11 @@
       "id": "integrations",
       "label": "Integrations",
       "builtIn": "integrations"
+    },
+    {
+      "id": "routines",
+      "label": "Routines",
+      "builtIn": "routines"
     }
   ],
   "defaultTab": "overview",
@@ -42,7 +47,8 @@
     "followups.json": "[]",
     "bug-candidates.json": "[]",
     "churn-flags.json": "[]",
-    ".houston/activity.json": "[{\"id\":\"a2f9b110-3c52-48de-8a17-61b9e2f30d03\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: which inbox you use, your escalation contacts, and your signature. Best modality per topic: connected inbox via Composio (Integrations tab) > paste > file.\",\"status\":\"needs_you\"}]"
+    ".houston/activity.json": "[{\"id\":\"a2f9b110-3c52-48de-8a17-61b9e2f30d03\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: which inbox you use, your escalation contacts, and your signature. Best modality per topic: connected inbox via Composio (Integrations tab) > paste > file.\",\"status\":\"needs_you\"}]",
+    ".houston/routines/routines.json": "[{\"id\":\"weekday-morning-triage\",\"name\":\"Weekday morning triage digest\",\"description\":\"Weekdays 8:30am — pull unread from the connected inbox, triage, then draft the morning brief plus SLA + stale-thread check.\",\"prompt\":\"Run the weekday morning triage digest. First confirm ../head-of-support/support-context.md exists — if missing, stop and state the founder needs to run define-support-context first. If the required connected-inbox integration (Gmail / Front / Intercom / Help Scout / Zendesk) isn't connected via Composio, state which category is missing and stop. Otherwise: (1) run triage-incoming to pull unread and update conversations.json, (2) run sla-watchdog to surface threads approaching or past their SLA window per the tiers in support-context.md, (3) run stale-thread-rescue for threads > 48h waiting on the founder, (4) run morning-briefing to aggregate into morning-brief.md at the agent root (overwrite). Log in outputs.json. The output the founder sees should be the top items: VIPs needing response, SLA breaches imminent or active, promises due today, fresh bug candidates, fresh churn flags — ranked. If no unread came in, no SLA is imminent, no VIP is waiting, no promise is due, and no thread is stale > 48h, there is nothing for the founder to act on.\",\"schedule\":\"30 8 * * 1-5\",\"enabled\":true,\"suppress_when_silent\":true,\"created_at\":\"2026-04-23T00:00:00Z\",\"updated_at\":\"2026-04-23T00:00:00Z\"},{\"id\":\"weekly-churn-risk-scan\",\"name\":\"Weekly churn-risk scan\",\"description\":\"Every Friday 4pm — scan the last 30 days of inbox traffic for sentiment + behavior churn signals; update churn-flags.json.\",\"prompt\":\"Run the weekly churn-risk scan using the churn-risk-scan skill. First confirm ../head-of-support/support-context.md exists — if missing, stop and state the founder needs to run define-support-context first. Scan the last 30 days of conversations.json and thread contents for: sentiment-negative phrases, repeated complaints, silence > 14 days after a promise in followups.json, downgrade/cancellation language, 'you don't listen' patterns. Cross-reference the VIP list in support-context.md. Score each flagged customer by severity and update churn-flags.json (merge on customerSlug — don't append duplicates). In the output, surface only flags that are NEW or have escalated in severity since the previous run (compare against existing churn-flags.json entries). For each new/escalated flag, give one-sentence reasoning and a suggested handoff to Success (draft-churn-save). If no new or escalated RED/YELLOW flags fired this week, there is nothing for the founder to act on.\",\"schedule\":\"0 16 * * 5\",\"enabled\":true,\"suppress_when_silent\":true,\"created_at\":\"2026-04-23T00:00:00Z\",\"updated_at\":\"2026-04-23T00:00:00Z\"}]"
   },
   "useCases": [
     {

@@ -32,6 +32,11 @@
       "id": "integrations",
       "label": "Integrations",
       "builtIn": "integrations"
+    },
+    {
+      "id": "routines",
+      "label": "Routines",
+      "builtIn": "routines"
     }
   ],
   "defaultTab": "overview",
@@ -43,7 +48,8 @@
     "requests.json": "[]",
     "known-issues.json": "[]",
     "shipped-log.json": "[]",
-    ".houston/activity.json": "[{\"id\":\"d4e1f822-6a7b-4c0d-9f2e-83d4a1c6e104\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: where your docs live, which tracker you use for bugs + feature requests, and how you want the weekly digest delivered. Best modality per topic: connected app via Composio (Integrations tab) > URL > paste.\",\"status\":\"needs_you\"}]"
+    ".houston/activity.json": "[{\"id\":\"d4e1f822-6a7b-4c0d-9f2e-83d4a1c6e104\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: where your docs live, which tracker you use for bugs + feature requests, and how you want the weekly digest delivered. Best modality per topic: connected app via Composio (Integrations tab) > URL > paste.\",\"status\":\"needs_you\"}]",
+    ".houston/routines/routines.json": "[{\"id\":\"weekly-gap-scan\",\"name\":\"Weekly KB gap scan\",\"description\":\"Every Monday 9am — cluster the last 7 days of inbox traffic for repeat questions and surface 3+-instance gaps with no matching article.\",\"prompt\":\"Run the weekly KB gap scan. First confirm ../head-of-support/support-context.md exists — if missing, stop and state the founder needs to run define-support-context first. Then use detect-repeat-question to semantically cluster the last 7 days of ../inbox/conversations.json and thread contents, ignoring anything already covered by an article in articles.json. Append new clusters to patterns.json. Then use gap-surface to rank open gaps by frequency, VIP weight (cross-ref ../head-of-support/support-context.md VIP list), and recency. Surface the top 3 new 3+-instance clusters in the output — question in plain user language, how many customers asked, suggested article title. If no new 3+-instance clusters appeared since last run (check gaps.json for entries newer than 7 days) and no VIP-tagged repeat questions are outstanding, there is nothing for the founder to act on.\",\"schedule\":\"0 9 * * 1\",\"enabled\":true,\"suppress_when_silent\":true,\"created_at\":\"2026-04-23T00:00:00Z\",\"updated_at\":\"2026-04-23T00:00:00Z\"},{\"id\":\"monthly-content-audit\",\"name\":\"Monthly content audit\",\"description\":\"1st of the month — audit existing articles for staleness (lastVerifiedAt > 90 days, referenced deprecations, known-issue status drift).\",\"prompt\":\"Run the monthly Help Center content audit. First confirm ../head-of-support/support-context.md exists — if missing, stop and state the founder needs to run define-support-context first. Read articles.json and the article bodies under articles/. For each article, flag it if any of these apply: (1) status is 'published' and lastVerifiedAt is null or older than 90 days, (2) the article references a feature surface or naming that conflicts with current support-context.md product overview, (3) the article is a known-issue article whose matching known-issues.json entry has moved to 'resolved' but the article still reads 'investigating' or 'workaround-available'. For each flagged article, update its meta.json with status 'needs-refresh' and reviewNotes explaining why. Surface the flagged list in the output grouped by reason, with a suggested action per article (rewrite, archive, re-verify). Log the audit in outputs.json. If no articles need refresh and no known-issue status drift was detected, there is nothing for the founder to act on.\",\"schedule\":\"0 9 1 * *\",\"enabled\":true,\"suppress_when_silent\":true,\"created_at\":\"2026-04-23T00:00:00Z\",\"updated_at\":\"2026-04-23T00:00:00Z\"}]"
   },
   "useCases": [
     {
